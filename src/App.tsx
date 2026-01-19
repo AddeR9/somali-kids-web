@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
 type Scene = { title: string; description: string; image: string; tag: string }
@@ -39,19 +41,31 @@ const scenes: Scene[] = [
     image: '/scenes/MemoryGame.png',
     tag: 'Animals & Memory'
   }
-];
-
+]
 
 export default function App() {
+  const GOOGLE_PLAY_URL = 'https://play.google.com/store' // replace when live
+  const SHOW_GOOGLE_PLAY_COMING_SOON = true
+  const STORAGE_KEY = 'somalikids_seen_googleplay_comingsoon_v1'
+
+  const [showModal, setShowModal] = useState(false)
+  const [hideBanner, setHideBanner] = useState(false)
+
+  useEffect(() => {
+    if (!SHOW_GOOGLE_PLAY_COMING_SOON) return
+    const seen = localStorage.getItem(STORAGE_KEY)
+    if (!seen) {
+      setShowModal(true)
+      localStorage.setItem(STORAGE_KEY, '1')
+    }
+  }, [])
+
   return (
     <>
       {/* TOP BAR */}
-      <div className="ui inverted menu" style={{ margin: 0, borderRadius: 0, background: "#5f00c3" }}>
+      <div className="ui inverted menu" style={{ margin: 0, borderRadius: 0, background: '#5f00c3' }}>
         <div className="ui container">
-          <a className="header item" href="#top">
-            Somali Kids
-          </a>
-
+          <a className="header item" href="#top">Somali Kids</a>
           <div className="right menu">
             <a className="item" href="#scenes">Games</a>
             <a className="item" href="#download">Download</a>
@@ -59,109 +73,120 @@ export default function App() {
         </div>
       </div>
 
+      {/* COMING SOON BANNER */}
+      {SHOW_GOOGLE_PLAY_COMING_SOON && !hideBanner && (
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 1000,
+            background: '#fff7e6',
+            borderBottom: '1px solid #ffe1ad',
+            padding: '10px 12px',
+          }}
+        >
+          <div className="ui container" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+            <div style={{ fontSize: 14 }}>
+              <strong>Google Play coming soon</strong> — Android version is not published yet. iOS is available.
+            </div>
+            <button className="ui tiny basic button" onClick={() => setHideBanner(true)}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL + DIMMER (CENTERED) */}
+      {SHOW_GOOGLE_PLAY_COMING_SOON && (
+        <>
+          <div className={`ui dimmer modals ${showModal ? 'active' : ''}`} onClick={() => setShowModal(false)}>
+            <div className={`ui modal ${showModal ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
+              <div className="header">Google Play version coming soon</div>
+              <div className="content">
+                <p>
+                  The Android version of Somali Kids is not available on Google Play yet — but it’s on the way. 🙌
+                </p>
+                <p>
+                  You can already download the iOS version or explore all the games below.
+                </p>
+              </div>
+              <div className="actions">
+                <a
+                  className="ui button"
+                  href="https://apps.apple.com/us/app/somali-kids-learn-somali/id1570713832"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Get on App Store
+                </a>
+                <button className="ui primary button" onClick={() => setShowModal(false)}>
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* HERO */}
-      <div
-        id="top"
-        className="ui inverted vertical segment"
-        style={{marginTop: 0, background: "#5f00c3" }}
-      >
+      <div id="top" className="ui inverted vertical segment" style={{ background: '#5f00c3' }}>
         <div className="ui text container center aligned">
-  <img
-    src="logos/playstore.png"
-    alt="Somali Kids"
-    style={{
-      height: 200,              // 👈 ändra här om du vill större/mindre
-      width: 'auto',
-      display: 'block',
-      margin: '0 auto 18px',    // centrerad + space under
-    }}
-  />
+          <img
+            src="logos/playstore.png"
+            alt="Somali Kids"
+            style={{ height: 200, margin: '0 auto 18px', display: 'block' }}
+          />
 
-  <h1 className="ui inverted header" style={{ fontSize: '2.6em', marginBottom: 10 }}>
-    Educational games for children
-    <div className="sub header" style={{ marginTop: 10 }}>
-      Interactive games with sound, animation and play
-    </div>
-  </h1>
+          <h1 className="ui inverted header">
+            Educational games for children
+            <div className="sub header">
+              Interactive learning through sound, animation and play
+            </div>
+          </h1>
 
-
-          <div className="ui hidden divider" />
-
-          <div
-            id="download"
-            style={{
-              display: 'flex',
-              gap: 14,
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              marginTop: 10,
-            }}
-          >
-            <a
-              className="ui large basic inverted button"
-              href="https://play.google.com/store"
-              target="_blank"
-              rel="noreferrer"
-              style={{ padding: 10 }}
-            >
-              <img src="/badges/google-play.png" alt="Google Play" style={{ height: 44, display: 'block' }} />
-            </a>
-
-            <a
+          <div id="download" style={{ marginTop: 20, display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <a
               className="ui large basic inverted button"
               href="https://apps.apple.com/us/app/somali-kids-learn-somali/id1570713832"
               target="_blank"
               rel="noreferrer"
-              style={{ padding: 10 }}
             >
-              <img src="/badges/app-store.png" alt="App Store" style={{ height: 44, display: 'block' }} />
+              <img src="/badges/appstore.png" alt="App Store" style={{ height: 44 }} />
             </a>
+            {SHOW_GOOGLE_PLAY_COMING_SOON ? (
+              <button className="ui large basic inverted button" onClick={() => setShowModal(true)}>
+                <img src="/badges/googleplay.png" alt="Google Play" style={{ height: 44, opacity: 0.6 }} />
+                <div style={{ fontSize: 12, marginTop: 6 }}>Coming soon</div>
+              </button>
+            ) : (
+              <a className="ui large basic inverted button" href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">
+                <img src="/badges/googleplay.png" alt="Google Play" style={{ height: 44 }} />
+              </a>
+            )}
           </div>
 
-          {/* Small highlight row */}
-          <div className="ui tiny horizontal list" style={{ marginTop: 18, opacity: 0.9 }}>
-            <div className="item">
-              <i className="check circle icon" />
-              No text — audio driven
-            </div>
-            <div className="item">
-              <i className="check circle icon" />
-              Ages 4+
-            </div>
-            <div className="item">
-              <i className="check circle icon" />
-              New games coming
-            </div>
+          <div className="ui tiny horizontal list" style={{ marginTop: 18 }}>
+            <div className="item"><i className="check circle icon" /> Audio-based learning</div>
+            <div className="item"><i className="check circle icon" /> Ages 4+</div>
+            <div className="item"><i className="check circle icon" /> New games coming</div>
           </div>
         </div>
       </div>
 
       {/* SCENES */}
-      <div id="scenes" className="ui container" style={{ marginTop: 40, marginBottom: 60 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <h2 className="ui dividing header" style={{ marginBottom: 0 }}>All Games</h2>
-
-          <a className="ui orange basic button" href="#download">
-            Download now
-          </a>
-        </div>
-
-        <div className="ui hidden divider" />
+      <div id="scenes" className="ui container" style={{ margin: '40px 0 60px' }}>
+        <h2 className="ui dividing header">All Games</h2>
 
         <div className="ui three stackable cards">
-          {scenes.map((s) => (
+          {scenes.map(s => (
             <div className="ui card" key={s.title}>
               <div className="image">
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  style={{ height: 170, objectFit: 'cover', width: '100%' }}
-                />
+                <img src={s.image} alt={s.title} style={{ height: 170, objectFit: 'cover' }} />
               </div>
               <div className="content">
                 <div className="ui orange ribbon label">{s.tag}</div>
                 <div className="header" style={{ marginTop: 10 }}>{s.title}</div>
-                <div className="description" style={{ marginTop: 8 }}>{s.description}</div>
+                <div className="description">{s.description}</div>
               </div>
             </div>
           ))}
@@ -169,21 +194,15 @@ export default function App() {
       </div>
 
       {/* FOOTER */}
-<div className="ui inverted vertical segment center aligned" style={{ padding: '2.5em 0' }}>
-  <div className="ui small horizontal inverted divided link list">
-    <a className="item" href="/privacy.html" target="_blank" rel="noreferrer">
-      Privacy Policy
-    </a>
-    <a className="item" href="/terms.html" target="_blank" rel="noreferrer">
-      Terms of Use
-    </a>
-  </div>
-
-  <div style={{ marginTop: 12, opacity: 0.7 }}>
-    © {new Date().getFullYear()} Somali Kids
-  </div>
-</div>
-
+      <div className="ui inverted vertical segment center aligned" style={{ padding: '2.5em 0' }}>
+        <div className="ui small horizontal inverted divided link list">
+          <a className="item" href="/privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a>
+          <a className="item" href="/terms.html" target="_blank" rel="noreferrer">Terms of Use</a>
+        </div>
+        <div style={{ marginTop: 12, opacity: 0.7 }}>
+          © {new Date().getFullYear()} Somali Kids
+        </div>
+      </div>
     </>
   )
 }
