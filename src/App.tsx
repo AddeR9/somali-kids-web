@@ -51,14 +51,15 @@ export default function App() {
   const [showModal, setShowModal] = useState(false)
   const [hideBanner, setHideBanner] = useState(false)
 
-  useEffect(() => {
-    if (!SHOW_GOOGLE_PLAY_COMING_SOON) return
-    const seen = localStorage.getItem(STORAGE_KEY)
-    if (!seen) {
-      setShowModal(true)
-      localStorage.setItem(STORAGE_KEY, '1')
-    }
-  }, [])
+useEffect(() => {
+  // No auto-popup. Only show when user clicks the Android badge.
+  // You can still use this key later if you want (e.g., don’t show again checkbox).
+  if (!SHOW_GOOGLE_PLAY_COMING_SOON) return
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    localStorage.setItem(STORAGE_KEY, '1')
+  }
+}, [])
+
 
   return (
     <>
