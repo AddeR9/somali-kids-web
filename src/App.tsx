@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
@@ -44,22 +43,8 @@ const scenes: Scene[] = [
 ]
 
 export default function App() {
-  const GOOGLE_PLAY_URL = 'https://play.google.com/store' // replace when live
-  const SHOW_GOOGLE_PLAY_COMING_SOON = true
-  const STORAGE_KEY = 'somalikids_seen_googleplay_comingsoon_v1'
-
-  const [showModal, setShowModal] = useState(false)
-  const [hideBanner, setHideBanner] = useState(false)
-
-useEffect(() => {
-  // No auto-popup. Only show when user clicks the Android badge.
-  // You can still use this key later if you want (e.g., don’t show again checkbox).
-  if (!SHOW_GOOGLE_PLAY_COMING_SOON) return
-  if (!localStorage.getItem(STORAGE_KEY)) {
-    localStorage.setItem(STORAGE_KEY, '1')
-  }
-}, [])
-
+  const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.SharpStack.SomaliKids'
+  const APP_STORE_URL = 'https://apps.apple.com/us/app/somali-kids-learn-somali/id1570713832'
 
   return (
     <>
@@ -74,120 +59,66 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* COMING SOON BANNER */}
-      {SHOW_GOOGLE_PLAY_COMING_SOON && !hideBanner && (
-        <div
-          style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 1000,
-            background: '#fff7e6',
-            borderBottom: '1px solid #ffe1ad',
-            padding: '10px 12px',
-          }}
-        >
-          <div className="ui container" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-            <div style={{ fontSize: 14 }}>
-              <strong>Google Play coming soon</strong> — Android version is not published yet. iOS is available.
-            </div>
-            <button className="ui tiny basic button" onClick={() => setHideBanner(true)}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL + DIMMER (CENTERED) */}
-      {SHOW_GOOGLE_PLAY_COMING_SOON && (
-        <>
-          <div className={`ui dimmer modals ${showModal ? 'active' : ''}`} onClick={() => setShowModal(false)}>
-            <div className={`ui modal ${showModal ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-              <div className="header">Google Play version coming soon</div>
-              <div className="content">
-                <p>
-                  The Android version of Somali Kids is not available on Google Play yet — but it’s on the way. 🙌
-                </p>
-                <p>
-                  You can already download the iOS version or explore all the games below.
-                </p>
-              </div>
-              <div className="actions">
-                <a
-                  className="ui button"
-                  href="https://apps.apple.com/us/app/somali-kids-learn-somali/id1570713832"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Get on App Store
-                </a>
-                <button className="ui primary button" onClick={() => setShowModal(false)}>
-                  OK
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
       {/* HERO */}
-      <div id="top" className="ui inverted vertical segment" style={{ background: '#5f00c3' }}>
+      <div id="top" className="ui inverted vertical segment" style={{ background: '#5f00c3', padding: '4em 0' }}>
         <div className="ui text container center aligned">
           <img
             src="logos/playstore.png"
-            alt="Somali Kids"
-            style={{ height: 200, margin: '0 auto 18px', display: 'block' }}
+            alt="Somali Kids Logo"
+            style={{ height: 180, margin: '0 auto 20px', display: 'block' }}
           />
 
-          <h1 className="ui inverted header">
+          <h1 className="ui inverted header" style={{ fontSize: '3em' }}>
             Educational games for children
-            <div className="sub header">
+            <div className="sub header" style={{ marginTop: '0.5em', opacity: 0.9 }}>
               Interactive learning through sound, animation and play
             </div>
           </h1>
 
-          <div id="download" style={{ marginTop: 20, display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <a
-              className="ui large basic inverted button"
-              href="https://apps.apple.com/us/app/somali-kids-learn-somali/id1570713832"
-              target="_blank"
+          <div id="download" style={{ marginTop: 40, display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a 
+              className="ui large basic inverted button" 
+              href={APP_STORE_URL} 
+              target="_blank" 
               rel="noreferrer"
+              style={{ padding: '10px' }}
             >
-              <img src="/badges/appstore.png" alt="App Store" style={{ height: 44 }} />
+              <img src="/badges/appstore.png" alt="Download on App Store" style={{ height: 48 }} />
             </a>
-            {SHOW_GOOGLE_PLAY_COMING_SOON ? (
-              <button className="ui large basic inverted button" onClick={() => setShowModal(true)}>
-                <img src="/badges/googleplay.png" alt="Google Play" style={{ height: 44, opacity: 0.6 }} />
-                <div style={{ fontSize: 12, marginTop: 6 }}>Coming soon</div>
-              </button>
-            ) : (
-              <a className="ui large basic inverted button" href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">
-                <img src="/badges/googleplay.png" alt="Google Play" style={{ height: 44 }} />
-              </a>
-            )}
+            
+            <a 
+              className="ui large basic inverted button" 
+              href={GOOGLE_PLAY_URL} 
+              target="_blank" 
+              rel="noreferrer"
+              style={{ padding: '10px' }}
+            >
+              <img src="/badges/googleplay.png" alt="Get it on Google Play" style={{ height: 48 }} />
+            </a>
           </div>
 
-          <div className="ui tiny horizontal list" style={{ marginTop: 18 }}>
+          <div className="ui tiny horizontal list" style={{ marginTop: 30, opacity: 0.8 }}>
             <div className="item"><i className="check circle icon" /> Audio-based learning</div>
             <div className="item"><i className="check circle icon" /> Ages 4+</div>
-            <div className="item"><i className="check circle icon" /> New games coming</div>
+            <div className="item"><i className="check circle icon" /> Culturally relevant content</div>
           </div>
         </div>
       </div>
 
       {/* SCENES */}
-      <div id="scenes" className="ui container" style={{ margin: '40px 0 60px' }}>
-        <h2 className="ui dividing header">All Games</h2>
+      <div id="scenes" className="ui container" style={{ margin: '60px 0 80px' }}>
+        <h2 className="ui dividing header">Explore the Games</h2>
 
         <div className="ui three stackable cards">
           {scenes.map(s => (
-            <div className="ui card" key={s.title}>
+            <div className="ui card" key={s.title} style={{ borderRadius: 12, overflow: 'hidden' }}>
               <div className="image">
-                <img src={s.image} alt={s.title} style={{ height: 170, objectFit: 'cover' }} />
+                <img src={s.image} alt={s.title} style={{ height: 200, objectFit: 'cover' }} />
               </div>
               <div className="content">
                 <div className="ui orange ribbon label">{s.tag}</div>
-                <div className="header" style={{ marginTop: 10 }}>{s.title}</div>
-                <div className="description">{s.description}</div>
+                <div className="header" style={{ marginTop: 15 }}>{s.title}</div>
+                <div className="description" style={{ color: '#555' }}>{s.description}</div>
               </div>
             </div>
           ))}
@@ -195,13 +126,13 @@ useEffect(() => {
       </div>
 
       {/* FOOTER */}
-      <div className="ui inverted vertical segment center aligned" style={{ padding: '2.5em 0' }}>
+      <div className="ui inverted vertical segment center aligned" style={{ padding: '3em 0', background: '#1b1c1d' }}>
         <div className="ui small horizontal inverted divided link list">
           <a className="item" href="/privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a>
           <a className="item" href="/terms.html" target="_blank" rel="noreferrer">Terms of Use</a>
         </div>
-        <div style={{ marginTop: 12, opacity: 0.7 }}>
-          © {new Date().getFullYear()} Somali Kids
+        <div style={{ marginTop: 15, opacity: 0.5, fontSize: '0.9em' }}>
+          © {new Date().getFullYear()} Somali Kids. Built with care for the next generation.
         </div>
       </div>
     </>
