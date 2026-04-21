@@ -11,6 +11,18 @@ const scenes: Scene[] = [
     tag: 'Explore & Play'
   },
   {
+    "title": "Somali Speech",
+    "description": "An interactive speech game where children practice their pronunciation by recording words and receiving instant feedback in Somali.",
+    "image": "/scenes/SomaliSpeech.png",
+    "tag": "Speech & Pronunciation"
+  },
+  {
+    "title": "Somali Camel Balance",
+    "description": "A fun physics-based challenge where players stack items on a camel's back to learn vocabulary through balance and coordination.",
+    "image": "/scenes/CamelBalance.png",
+    "tag": "Physics & Logic"
+  },
+  {
     title: 'Transport Memory',
     description: 'A gentle memory game where children tap and listen to transport sounds while learning vehicle names in Somali.',
     image: '/scenes/TheCatch.png',
